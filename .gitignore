@@ -1,5 +1,7 @@
 # Prerequisites
 *.d
+.cache/
+.cache/**
 
 # Build items
 build

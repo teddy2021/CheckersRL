@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "player.hpp"
+#include "pmove.hpp"
 #include "ai.hpp"
 #include <bits/stdc++.h>
 #include <curses.h>
@@ -80,12 +81,19 @@ bool game::getInput(){
 	ey /= 2;
 	ey -= 4;
 
-	doMove(sx,sy,ex,ey);
+	pmove m(sx, sy, ex, ey);
+	doMove(m);
 	display();
 	return true;
 }
 
-void game::doMove(int sx, int sy, int nx, int ny){
+void game::doMove(pmove m){
+	pair<int> start = m.getStart();
+	pair<int> end = m.getEnd();
+	int sx = start.x;
+	int sy = start.y;
+	int nx = end.x;
+	int ny = end.y;
 	if(std::abs(nx-sx) > 1 && std::abs(ny-sy) > 1){
 		brd.jumpPiece(sx, sy, nx, ny);
 	}
@@ -142,11 +150,12 @@ bool game::playTurn(){
 }
 
 void game::selectMove(player *plr){
-	vector<int> move = plr->selectMove();
-	if(move.size() < 4){
+	pmove m = plr->selectMove();
+	pair<int> start = m.getStart();
+	if(start.x == -1){
 		return;
 	}
-	doMove(move[0], move[1], move[2], move[3]);
+	doMove(m);
 }
 
 game::game(): brd(), curs_x(4), curs_y(1) {

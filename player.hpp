@@ -2,6 +2,7 @@
 using std::vector;
 
 #include "piece.hpp"
+#include "pmove.hpp"
 #pragma once
 
 enum p_type {human, computer};
@@ -24,7 +25,7 @@ class player{
 
 		int getScore();
 
-		virtual vector<int> selectMove(){return vector<int>();};
+		virtual pmove selectMove(){return pmove(0,0,0,0);};
 };
 
 template <typename al>
@@ -36,7 +37,7 @@ class ai: public player{
 	public:
 		ai(team tm, al *algo): player(tm, computer), algorithm(algo){};
 
-		vector<int> selectMove() override{
+		pmove selectMove() override{
 			return algorithm->getMove(t);
 		};
 };

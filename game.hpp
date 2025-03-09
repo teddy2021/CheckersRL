@@ -1,6 +1,6 @@
 #include "board.hpp"
 #include "player.hpp"
-
+#include "pmove.hpp"
 #include "ai.hpp"
 
 #include <curses.h>
@@ -23,7 +23,7 @@ class game{
 
 		bool getInput();
 		void selectMove(player *plr);
-		void doMove(int sx, int sy, int nx, int ny);
+		void doMove(pmove m);
 	public:
 		game();
 		~game();		

@@ -1,6 +1,7 @@
 #pragma once
 #include "piece.hpp"
 #include "tree.hpp"
+#include "pmove.hpp"
 
 #include <vector>
 using std::vector;
@@ -33,8 +34,8 @@ class board{
 	public:
 		board();
 		~board();
-		vector<vector<int>> getValidMoves();
-		vector<vector<int>> getValidMoves(team t);
+		vector<pmove> getValidMoves();
+		vector<pmove> getValidMoves(team t);
 		
 		void movePiece(int sx, int sy, int ex, int ey);
 		void movePiece(piece sp, int x, int y);

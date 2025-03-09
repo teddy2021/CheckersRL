@@ -9,6 +9,7 @@ project(Checkers)
 
 add_executable(tests
 	piece.cpp piece.hpp
+	pmove.cpp pmove.hpp
 	tree.hpp 
 	board.cpp board.hpp
 	player.cpp player.hpp
@@ -19,6 +20,7 @@ add_executable(tests
 
 add_executable(main
 	piece.cpp piece.hpp
+	pmove.cpp pmove.hpp
 	tree.hpp 
 	board.cpp board.hpp
 	player.cpp player.hpp

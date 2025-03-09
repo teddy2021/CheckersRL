@@ -1,6 +1,7 @@
 #include "board.hpp"
 #include "tree.hpp"
 #include "piece.hpp"
+#include "pmove.hpp"
 
 
 #include <stdexcept>
@@ -280,151 +281,111 @@ void board::movePiece(piece sp, int x, int y){
 }
 
 
-vector<vector<int>> board::getValidMoves(){
+vector<pmove> board::getValidMoves(){
 	vector<dNode<piece>> current = pieces.inorder();
-	vector<vector<int>> moves(0);
+	vector<pmove> moves;
 	team t;
 	int forward = 0;
 	int right = 0;
 	for(int i = 0; i < current.size(); i += 1){
-		vector<int> moveset;
+		vector<pair<int>> moveset;
 		piece p = *current[i].getValue();
 		t = p.getTeam();
+		pair<int> start{p.primary(), p.secondary()};
 		forward = (t==black)-(t==red);
 		right = (t==black)-(t==red);
 		if(canMoveForwardLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(-right + p.primary());
-			moveset.push_back(forward + p.secondary());
+			moveset.push_back(pair<int>{-right + p.primary(), forward + p.secondary()});
 		}
 		if(canMoveForwardRight(p)){
 
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(right + p.primary());
-			moveset.push_back(forward + p.secondary());
+			moveset.push_back(pair<int>{right + p.primary(), forward + p.secondary()});
 		}
 		if(canMoveBackLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(-right + p.primary());
-			moveset.push_back(-forward + p.secondary());
+			moveset.push_back(pair<int>{-right + p.primary(), -forward + p.secondary()});
 
 		}
 		if(canMoveBackRight(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(right + p.primary());
-			moveset.push_back(-forward + p.secondary());
+			moveset.push_back(pair<int>{right + p.primary(), -forward + p.secondary()});
 
 		}
 		if(canJumpForwardLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((-2*right) + p.primary());
-			moveset.push_back((2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(-2*right) + p.primary(), (2*forward) + p.secondary()});
 
 		}
 		if(canJumpForwardRight(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((2*right) + p.primary());
-			moveset.push_back((2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(2*right) + p.primary(), (2*forward) + p.secondary()});
 
 		}
 		if(canJumpBackLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((-2*right) + p.primary());
-			moveset.push_back((-2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(-2*right) + p.primary(), (-2*forward) + p.secondary()});
 
 		}
 		if(canJumpBackRight(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((2*right) + p.primary());
-			moveset.push_back((-2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(2*right) + p.primary(), (-2*forward) + p.secondary()});
 
 		}
 		if(moveset.size() > 0){  
-			moves.push_back(moveset);
+			for(int i = 0; i < moveset.size(); i += 1){
+				pmove m(start, moveset[i]);
+				moves.push_back(m);
+			}
 		}
 	}
 	return moves;
 }
 
 
-vector<vector<int>> board::getValidMoves(team t){
+vector<pmove> board::getValidMoves(team t){
 	vector<dNode<piece>> current = pieces.inorder();
-	vector<vector<int>> moves;
+	vector<pmove> moves;
 	int forward = 0;
 	int right = 0;
 	forward = (t==black)-(t==red);
 	right = (t==black)-(t==red);
 	for(int i = 0; i < current.size(); i += 1){
-		vector<int> moveset;
+		vector<pair<int>> moveset;
 		piece p = *current[i].getValue();
+		pair<int> start{p.primary(), p.secondary()};
 		if(p.getTeam() != t){
 			continue;
 		}
 		if(canMoveForwardLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(-right + p.primary());
-			moveset.push_back(forward + p.secondary());
+			moveset.push_back(pair<int>{-right + p.primary(), forward + p.secondary()});
 		}
 		if(canMoveForwardRight(p)){
 
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(right + p.primary());
-			moveset.push_back(forward + p.secondary());
+			moveset.push_back(pair<int>{right + p.primary(), forward + p.secondary()});
 		}
 		if(canMoveBackLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(-right + p.primary());
-			moveset.push_back(-forward + p.secondary());
+			moveset.push_back(pair<int>{-right + p.primary(), -forward + p.secondary()});
 
 		}
 		if(canMoveBackRight(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back(right + p.primary());
-			moveset.push_back(-forward + p.secondary());
+			moveset.push_back(pair<int>{right + p.primary(), -forward + p.secondary()});
 
 		}
 		if(canJumpForwardLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((-2*right) + p.primary());
-			moveset.push_back((2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(-2*right) + p.primary(), (2*forward) + p.secondary()});
 
 		}
 		if(canJumpForwardRight(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((2*right) + p.primary());
-			moveset.push_back((2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(2*right) + p.primary(), (2*forward) + p.secondary()});
 
 		}
 		if(canJumpBackLeft(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((-2*right) + p.secondary());
-			moveset.push_back((-2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(-2*right) + p.primary(), (-2*forward) + p.secondary()});
 
 		}
 		if(canJumpBackRight(p)){
-			moveset.push_back(p.primary());
-			moveset.push_back(p.secondary());
-			moveset.push_back((2*right) + p.primary());
-			moveset.push_back((-2*forward) + p.secondary());
+			moveset.push_back(pair<int>{(2*right) + p.primary(), (-2*forward) + p.secondary()});
 
 		}
 		if(moveset.size() > 0){  
-			moves.push_back(moveset);
+			for(int i = 0; i < moveset.size(); i += 1){
+				pmove m(start, moveset[i]);
+				moves.push_back(m);
+			}
 		}
 	}
 	return moves;

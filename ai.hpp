@@ -1,5 +1,7 @@
 #include "board.hpp"
 #include "piece.hpp"
+#include "pmove.hpp"
+
 #include <vector>
 using std::vector;
 
@@ -12,7 +14,7 @@ class algorithm{
 		board * brd;
 	public:
 		algorithm(board *b): brd(b){};
-		virtual vector<int> getMove(team t){return vector<int>();};
+		virtual pmove getMove(team t){return pmove(-1,-1,-1,-1);};
 
 };
 
@@ -22,7 +24,7 @@ class randm: public algorithm{
 		int randomRange(int min, int max);
 	public:
 		randm(board *b): algorithm(b){ srand(time(0));};
-		vector<int> getMove(team t) override;
+		pmove getMove(team t) override;
 };
 
 
