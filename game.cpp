@@ -4,6 +4,8 @@
 #include "ai.hpp"
 #include <bits/stdc++.h>
 #include <curses.h>
+
+
 bool game::getInput(){
 	int x = 0;
 	int y = 0;
@@ -87,6 +89,7 @@ bool game::getInput(){
 	return true;
 }
 
+
 void game::doMove(pmove m){
 	pair<int> start = m.getStart();
 	pair<int> end = m.getEnd();
@@ -102,6 +105,7 @@ void game::doMove(pmove m){
 	}
 }
 
+
 void game::display(){
 	wmove(b_win, 0, 0);
 	brd.showBoard(b_win);
@@ -116,8 +120,12 @@ void game::display(){
 	refresh();
 }
 
+
 bool game::playTurn(){
 	bool res = true;
+	if(!brd.canPlay(black) || !brd.canPlay(red)){
+		return false;
+	}
 	switch(p1->getType()){
 		case human:
 			res = getInput();
@@ -131,6 +139,9 @@ bool game::playTurn(){
 		default:
 			break;
 	}
+
+	display();
+	sleep(1);
 
 	switch(p2->getType()){
 		case human:
@@ -149,6 +160,7 @@ bool game::playTurn(){
 	return res;
 }
 
+
 void game::selectMove(player *plr){
 	pmove m = plr->selectMove();
 	pair<int> start = m.getStart();
@@ -157,6 +169,7 @@ void game::selectMove(player *plr){
 	}
 	doMove(m);
 }
+
 
 game::game(): brd(), curs_x(4), curs_y(1) {
 	p1 = new player();
@@ -188,5 +201,20 @@ game::~game(){
 	endwin();
 }
 
+
+end_state game::getEndState(){
+	if(!brd.canPlay(black) && !brd.canPlay(red)){
+		return QUIT;
+	}
+	else if(brd.canPlay(black) && !brd.canPlay(red)){
+		return P1_VIC;
+	}
+	else if(!brd.canPlay(black) && brd.canPlay(red)){
+		return P2_VIC;
+	}
+	else{
+		return UNWINNABLE;
+	}
+}
 
 

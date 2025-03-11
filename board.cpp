@@ -20,6 +20,7 @@ board::board(): pieces(){
 	}
 }
 
+
 board::~board(){
 	for(int i = 0; i < 8; i += 1){
 		for(int j = 0; j < 8; j += 1){
@@ -33,6 +34,10 @@ board::~board(){
 	prevEnd.clear();
 }
 
+
+bool board::canPlay(team t){
+	return getValidMoves(t).size() > 0;
+}
 
 bool board::occupied(piece p, int offset_x, int offset_y){
 	int pos_x = p.primary() + offset_x;
@@ -88,7 +93,7 @@ bool board::canMoveBackLeft(piece p){
 	}
 	int back = (p.getTeam() == red) - (p.getTeam() == black);
 	int left = (p.getTeam() == red) - (p.getTeam() == black);
-	return !occupied(p, left, back) && inbounds(p, left, back);
+	return p.getType() == king && !occupied(p, left, back) && inbounds(p, left, back);
 }
 
 
@@ -98,7 +103,7 @@ bool board::canMoveBackRight(piece p){
 	}
 	int back = (p.getTeam() == red) - (p.getTeam() == black);
 	int right = (p.getTeam() == black) - (p.getTeam() == red);
-	return !occupied(p, right, back) && inbounds(p, right, back);
+	return p.getType() == king && !occupied(p, right, back) && inbounds(p, right, back);
 }
 
 
@@ -125,7 +130,8 @@ bool board::canJumpForwardRight(piece p){
 bool board::canJumpBackLeft(piece p){
 	int back = (p.getTeam() == red) - (p.getTeam() == black);
 	int left = (p.getTeam() == red) - (p.getTeam() == black);
-	return occupied(p, left, back)&&
+	return p.getType() == king &&
+		occupied(p, left, back)&&
 		opposing(p, left, back) &&
 		inbounds(p, left * 2, back * 2) &&
 		!occupied(p, left * 2, back * 2);
@@ -135,7 +141,8 @@ bool board::canJumpBackLeft(piece p){
 bool board::canJumpBackRight(piece p){
 	int back = (p.getTeam() == red) - (p.getTeam() == black);
 	int right = (p.getTeam() == black) - (p.getTeam() == red);
-	return occupied(p, right, back)&&
+	return p.getType() == king &&
+		occupied(p, right, back)&&
 		opposing(p, right, back) &&
 		inbounds(p, right * 2, back * 2) &&
 		!occupied(p, right * 2, back * 2);

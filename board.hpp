@@ -31,6 +31,7 @@ class board{
 		bool canJumpBackLeft(piece p);
 		bool canJumpBackRight(piece p);
 
+
 	public:
 		board();
 		~board();
@@ -42,6 +43,7 @@ class board{
 		void jumpPiece(int sx, int sy, int ex, int ey);
 		string moveString();
 
+		bool canPlay(team t);
 
 		void showBoard(WINDOW * win);
 };

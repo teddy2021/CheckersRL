@@ -4,6 +4,10 @@
 #include "ai.hpp"
 
 #include <curses.h>
+
+enum end_state {P1_VIC, P2_VIC, QUIT, UNWINNABLE};
+
+
 #pragma once
 class game{
 	private:
@@ -28,6 +32,8 @@ class game{
 		game();
 		~game();		
 		void display();
+
+		end_state getEndState();
 
 		bool playTurn();
 };

@@ -8,5 +8,6 @@ int main(){
 	while(cont){
 		cont = g.playTurn();
 	}
+	end_state e = g.getEndState();
 	return 0;
 }
