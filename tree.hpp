@@ -18,6 +18,9 @@ class dNode{
 		
 		dNode(): value(nullptr), left(nullptr), right(nullptr), height(1){};
 		dNode(t val): value(new t(val)), left(nullptr), right(nullptr), height(1){};
+		dNode(const dNode<t> &other): height(1){
+			*value = *other->value;
+		}
 		~dNode(){return;};
 
 		t *getValue(){
@@ -31,6 +34,9 @@ class dNode{
 		int getHeight(){ return height;  };
 
 		string to_string();
+
+		bool operator==(const dNode<t> &other);
+		void operator=(const dNode<t> &other);
 		
 };
 
@@ -67,7 +73,12 @@ class dTree{
 	public:
 		dTree():sz(0), root(){};
 		dTree(t val): sz(1), root(val){};
-
+		dTree(const dTree<t> &other):sz(other->sz){
+			vector<dNode<t>> values = other->inorder();
+			for(int i = 0; i < values.size(); i += 1){
+				insert(values[i].getValue());
+			}
+		};
 		~dTree(){
 			delete root;
 		};
@@ -99,6 +110,16 @@ template <typename t>
 string dNode<t>::to_string(){
 	string res = std::to_string(height);
 	return "[" + res + " " + value->to_string() + "]";
+}
+
+template <typename t>
+bool dNode<t>::operator==(const dNode<t> &other){
+	return *value == *other->value;
+}
+
+template <typename t>
+void dNode<t>::operator=(const dNode<t> &other){
+	*value = *other->value;
 }
 
 template <typename t>
